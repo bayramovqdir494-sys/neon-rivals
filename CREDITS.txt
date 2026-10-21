@@ -1,0 +1,5 @@
+Neon Rivals - credits
+Cars: procedurally generated in code (original designs, no third-party models).
+City kit: KayKit City Builder Bits by Kay Lousberg (CC0).
+Fonts: Chakra Petch and Russo One (SIL Open Font License 1.1, see fonts/).
+Engine: three.js (MIT).
