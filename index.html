@@ -3269,10 +3269,10 @@ class Car {
     const acc = dt > 0 ? (sp - (this.lastSp || sp)) / dt : 0; this.lastSp = sp;
     this.pitch = damp(this.pitch, (this.onGround ? slopePitch : this.pitch) + clamp(-acc * 0.004, -0.06, 0.06), 8, dt);
     this.roll = damp(this.roll, clamp(lat, -0.12, 0.12) + (this.drifting ? this.driftDir * 0.05 : 0), 7, dt);
-    if (this.flipV) { this.flip += this.flipV * dt; if (this.onGround && this.airT === 0) { const k = Math.round(this.flip / TAU) * TAU; this.flip = damp(this.flip, k, 14, dt); if (Math.abs(this.flip - k) < 0.05) { this.flip = 0; this.flipV = 0; } } }
+    if (this.flipV) { if (!this.onGround || this.airT > 0) this.flip += this.flipV * dt; if (this.onGround && this.airT === 0) { const k = Math.round(this.flip / TAU) * TAU; this.flip = damp(this.flip, k, 14, dt); if (Math.abs(this.flip - k) < 0.05) { this.flip = 0; this.flipV = 0; } } }
     this.landK = damp(this.landK, 0, 6, dt);
     this.body.rotation.set(this.pitch, 0, this.roll + this.flip, 'YXZ');
-    this.body.position.y = -this.landK * 0.25 + (this.onGround ? Math.sin(performance.now() * 0.03 + this.idx) * 0.012 * clamp(Math.abs(sp) / 30, 0, 1) : 0);
+    this.body.position.y = (this.flip ? Math.abs(Math.sin(this.flip)) * this.info.wid * 0.5 + (1 - Math.cos(this.flip)) * 0.5 * this.info.hgt : 0) - this.landK * 0.25 + (this.onGround ? Math.sin(performance.now() * 0.03 + this.idx) * 0.012 * clamp(Math.abs(sp) / 30, 0, 1) : 0);
     // wheels
     const wr = this.info.wheelR;
     for (const w of p.wheels) { w.spin.rotation.x += sp * dt / wr; if (w.front) w.o.rotation.y = this.steerS * 0.42; }
